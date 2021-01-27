@@ -78,9 +78,9 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       # Your job code here
-      - run:
-          name: Run linting
-          command: cd frontend && npm run pretest:cov
+      # - run:
+      #     name: Run linting
+      #     command: cd frontend && npm run pretest:cov
       - run:
           name: Run test front-end
           command: cd frontend && npm run test:cov
@@ -96,9 +96,9 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       # Your job code here
-      - run:
-          name: Run linting
-          command: cd backend && npm run lint
+      # - run:
+      #     name: Run linting
+      #     command: cd backend && npm run lint
       - run:
           name: Run test back-end
           command: cd backend && npm run test:cov
