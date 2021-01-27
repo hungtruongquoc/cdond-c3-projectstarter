@@ -38,8 +38,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [frontend-build]
+      # - restore_cache:
+      #     keys: [frontend-build]
       - run:
           name: Run npm install front-end
           command: cd frontend && npm i
@@ -55,8 +55,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
+      # - restore_cache:
+      #     keys: [backend-build]
       - run:
           name: Run npm install back-end
           command: cd backend && npm i
@@ -76,12 +76,14 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [test-frontend]
+          keys: [frontend-build]
       # Your job code here
       - run:
-          name: Test Front-end
-          command: /
-            npm run test:cov
+          name: Run linting
+          command: cd backend && npm run pretest:cov
+      - run:
+          name: Run test front-end
+          command: cd backend && npm run test:cov
 
   test-backend:
     docker:
@@ -91,7 +93,15 @@ jobs:
       # Checkout code from git
       - checkout
       # Restore from cache
+      - restore_cache:
+          keys: [backend-build]
       # Your job code here
+      - run:
+          name: Run linting
+          command: cd backend && npm run lint
+      - run:
+          name: Run test back-end
+          command: cd backend && npm run test:cov
 
   scan-frontend:
     docker:
