@@ -115,8 +115,8 @@ jobs:
           keys: [frontend-build]
       # Your job code here
       - run:
-        name: Analyzing front-end ...
-        command: cd frontend && npm audit --audit-level=critical
+          name: Analyzing front-end ...
+          command: cd frontend && npm audit --audit-level=critical
 
   scan-backend:
     docker:
