@@ -80,10 +80,10 @@ jobs:
       # Your job code here
       - run:
           name: Run linting
-          command: cd backend && npm run pretest:cov
+          command: cd frontend && npm run pretest:cov
       - run:
           name: Run test front-end
-          command: cd backend && npm run test:cov
+          command: cd frontend && npm run test:cov
 
   test-backend:
     docker:
