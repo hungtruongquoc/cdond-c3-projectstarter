@@ -40,13 +40,12 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - run: cd frontend
       - run:
           name: Run npm install front-end
-          command: npm i
+          command: cd frontend && npm i
       - run:
           name: Build front-end
-          command: npm run build
+          command: cd frontend && npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
