@@ -94,7 +94,7 @@ jobs:
       - image: circleci/node:13.8.0
     resource_class: large
     environment:
-      NODE_OPTIONS: --max_old_space_size=4096
+      NODE_OPTIONS: --max_old_space_size=5120
     steps:
       # Checkout code from git
       - checkout
