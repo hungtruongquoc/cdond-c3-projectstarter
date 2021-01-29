@@ -36,3 +36,16 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
+
+Outputs:
+  BackEndIp:
+    Description: Public IP of the back-end instance
+    Value: !GetAtt EC2Instance.PublicIp
+    Export:
+      Name: udapeople-back-end-ip
+  
+  BackEndDnsName:
+    Description: Public DNS domain of the back-end instance
+      Value: !GetAtt EC2Instance.PublicDnsName
+      Export:
+        Name: udapeople-back-end-domain
