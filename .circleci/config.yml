@@ -92,7 +92,7 @@ jobs:
     docker:
       # Docker image here
       - image: circleci/node:13.8.0
-    resource_class: medium+
+    resource_class: large
     environment:
       NODE_OPTIONS: --max_old_space_size=4096
     steps:
