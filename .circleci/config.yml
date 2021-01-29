@@ -54,7 +54,6 @@ jobs:
   build-backend:
     docker:
       - image: circleci/node:13.8.0
-    resource_class: medium+
     steps:
       - checkout
       # - restore_cache:
@@ -93,6 +92,7 @@ jobs:
     docker:
       # Docker image here
       - image: circleci/node:13.8.0
+    resource_class: medium+
     environment:
       NODE_OPTIONS: --max_old_space_size=4096
     steps:
