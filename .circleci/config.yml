@@ -167,7 +167,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
-            aws cloudformation list-export --query "Exports[Name=\`udapeople-back-end-ip\`]" --output text
+            aws cloudformation list-export --query "Exports[Name==\`udapeople-back-end-ip\`]" --output text
       - persist_to_workspace:
           root: ~/
           paths:
