@@ -46,6 +46,6 @@ Outputs:
   
   BackEndDnsName:
     Description: Public DNS domain of the back-end instance
-      Value: !GetAtt EC2Instance.PublicDnsName
-      Export:
-        Name: udapeople-back-end-domain
+    Value: !GetAtt EC2Instance.PublicDnsName
+    Export:
+      Name: udapeople-back-end-domain
