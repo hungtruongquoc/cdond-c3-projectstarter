@@ -28,7 +28,7 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl -H "token: <<parameters.ID>> --request GET https://api.memstash.io/values/migration_<<parameters.ID>>)
+            SUCCESS=$(curl -H "token: <<parameters.ID>>" --request GET https://api.memstash.io/values/migration_<<parameters.ID>>)
 
             if(( $SUCCESS==1 )); 
             then
@@ -280,7 +280,7 @@ jobs:
             else
               echo $(curl -H "Content-Type: text/plain" -H "token: ce-${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7} | grep "No migrations")
               echo "migration ID" migration_${CIRCLE_WORKFLOW_ID:0:7}
-              echo "FAIL = 0"
+              echo "SUCCESS = 0"
             fi
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
