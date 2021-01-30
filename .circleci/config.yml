@@ -111,7 +111,7 @@ jobs:
       #     command: cd backend && npm run lint
       - run:
           name: Run test back-end
-          command: cd backend && npm run test:cov
+          command: cd backend && npm run test
 
   scan-frontend:
     docker:
