@@ -195,8 +195,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints:
-            - "7a:0a:25:91:3e:04:74:7b:80:dd:c8:6b:47:dd:8d:a2:2f:9c:02:f1"
+          fingerprints: ["7a:0a:25:91:3e:04:74:7b:80:dd:c8:6b:47:dd:8d:a2:2f:9c:02:f1", "20:d6:c2:8e:b6:04:a4:d5:12:30:28:d7:e3:43:eb:3d"]
 #            - "20:d6:c2:8e:b6:04:a4:d5:12:30:28:d7:e3:43:eb:3d"
       # attach workspace
       - attach_workspace:
@@ -209,10 +208,24 @@ jobs:
             pip install awscli
       - run:
           name: Configure server
+          no_output_timeout: 30m
           command: |
             # Your code here
-            ls
-            cat ./.circleci/ansible/inventory.txt
+            echo PWD $(pwd)
+            echo $TYPEORM_HOST
+            #ls -la ~/project/backend
+            echo ENVIRONMENT=production >> "backend/.env"
+            echo NODE_ENV=production >> "backend/.env"
+            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+
             ansible-playbook -i ./.circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
