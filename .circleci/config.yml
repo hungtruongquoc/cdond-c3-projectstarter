@@ -173,7 +173,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
-            aws cloudformation list-exports --query "Exports[?Name==\`udapeople-back-end-ip\`].Value" --output text | tee -a ./.circleci/ansible/inventory.txt
+            aws cloudformation list-exports --query "Exports[?Name==\`udapeople-back-end-ip\`].Value" --output text >> ./.circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -188,19 +188,25 @@ jobs:
       # Checkout code from git
       - checkout
       # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints: ["09:5b:41:c5:9c:e5:2d:67:8a:18:31:14:e8:c5:f6:d6"]
       # attach workspace
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
             # Your code here
-            exit 1
+            pip install --user ansible
+            pip install awscli
       - run:
           name: Configure server
           command: |
             # Your code here
             exit 1
       # Here's where you will add some code to rollback on failure
-
+      - destroy-environment:
+          ID: ${CIRCLE_WORKFLOW_ID:0:7}
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
