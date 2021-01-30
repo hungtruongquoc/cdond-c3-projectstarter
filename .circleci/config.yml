@@ -20,18 +20,24 @@ commands:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
       # Add parameter here
+      ID:
+        type: string
     steps:
       - run:
           name: Revert migrations
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
+            SUCCESS=$(curl -H "token: <<parameters.ID>> --request GET https://api.memstash.io/values/migration_<<parameters.ID>>)
+
             if(( $SUCCESS==1 )); 
             then
             #  cd ~/project/backend
             #  npm install
             #  Add revert code here. You can find this in the Getting Started section.
+              cd backend
+              npm install
+              npm run migrations:revert
               exit 1
             fi
 
@@ -186,6 +192,7 @@ jobs:
       # Rollback on failure
       - destroy-environment:
           ID: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
@@ -229,11 +236,15 @@ jobs:
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           ID: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
       - image: circleci/node:13.8.0
     steps:
+      - checkout
+      - restore_cache:
+          keys: [ backend-build ]
       - run:
           name: awscli install
           command: |
@@ -245,15 +256,37 @@ jobs:
           name: Run migrations
           command: |
             # Your code here
-            exit 1
+            cd backend
+            npm install
+            npm run build
+            echo 'DUMP MIGRATIONS'
+            echo "PWD: " $(pwd)
+            npm run migrations >> ../migrations_dump.txt
+            echo 'MIGRATION RESULT'
+            echo '*****************'
+            cat migrations_dump.txt
+            echo '-----------------'
       - run:
           name: Send migration results to memstash
           command: |
             # Your code here
-            exit 1
+            cd backend
+            pwd
+            sudo cat migrations_dump.txt
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            then
+              curl -H "Content-Type: text/plain" -H "token: ce-${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
+              echo migration_${CIRCLE_WORKFLOW_ID:0:7}
+              echo "SUCCESS = 1"
+            else
+              echo $(curl -H "Content-Type: text/plain" -H "token: ce-${CIRCLE_WORKFLOW_ID:0:7}" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7} | grep "No migrations")
+              echo "migration ID" migration_${CIRCLE_WORKFLOW_ID:0:7}
+              echo "FAIL = 0"
+            fi
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           ID: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
