@@ -234,6 +234,12 @@ jobs:
       # Docker image here that supports NodeJS
       - image: circleci/node:13.8.0
     steps:
+      - run:
+          name: awscli install
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get -y -qq install python3
+            sudo apt-get -qq install awscli
       # Checkout code from git
       - run:
           name: Run migrations
