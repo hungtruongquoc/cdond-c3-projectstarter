@@ -5,13 +5,16 @@ commands:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
       # Add parameter here
+      ID:
+        type: string
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
             # Your code here
-            exit 1
+            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.ID>>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.ID>>
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -276,6 +279,7 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+            apk add --update curl
       - run:
           name: Get backend url
           command: |
@@ -288,6 +292,13 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
+            URL="https://blog.udacity.com/"
+            if curl -s --head ${URL} # test if blog.udacity. com exists
+            then
+             return 0
+            else
+             return 1
+            fi
       # Here's where you will add some code to rollback on failure
 
   cloudfront-update:
