@@ -89,7 +89,7 @@ jobs:
       #     command: cd frontend && npm run pretest:cov
       - run:
           name: Run test front-end
-          command: cd frontend && npm run test:cov
+          command: cd frontend && npm run test
 
   test-backend:
     docker:

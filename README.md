@@ -59,7 +59,8 @@ Before you submit your project, please check your work against the project rubri
 * [Query with filter](https://theserverlessway.com/aws/cli/query/)
 * [Generate finger print](https://stackoverflow.com/questions/36401863/ssh-key-pem-get-fingerprint)
 * [Code](https://github.com/PeteHeybrock/cdond-c3-projectstarter/blob/master/.circleci/config.yml)
-
+* [Debug connection timeout for EC2 instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesConnecting.html#TroubleshootingInstancesConnectionTimeout)
+* 
 ### License
 
 [License](LICENSE.md)
