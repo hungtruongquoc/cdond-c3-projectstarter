@@ -189,7 +189,7 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: circleci/python
+      - image: python:3.7-alpine3.11
     steps:
       # Checkout code from git
       - checkout
@@ -202,10 +202,9 @@ jobs:
           at: ~/
       - run:
           name: Install dependencies
+          working_directory: ./.circleci/ansible
           command: |
-            # Your code here
-            pip install --user ansible
-            pip install awscli
+            apk add --update ansible
       - run:
           name: Configure server
           no_output_timeout: 30m
