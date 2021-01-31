@@ -190,23 +190,23 @@ jobs:
           command: |
             apk add --update ansible
             apk add curl
-      - run:
-          name: Make .env file in backend.
-          command: |
-            echo NODE_ENV=production > "backend/.env"
-            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
-            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-      - persist_to_workspace:
-          root: .
-          paths:
-            - "backend/.env"
+#      - run:
+#          name: Make .env file in backend.
+#          command: |
+#            echo NODE_ENV=production > "backend/.env"
+#            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+#            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+#            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+#            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+#            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+#            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+#            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+#            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+#            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+#      - persist_to_workspace:
+#          root: .
+#          paths:
+#            - "backend/.env"
       - run:
           name: Configure server
           no_output_timeout: 30m
@@ -242,10 +242,18 @@ jobs:
           command: |
             # Your code here
             cd backend
-            echo "ENV FIle"
-            echo '*****************'
-            cat .env
-            echo '-----------------'
+
+            echo NODE_ENV=production > .env
+            echo TYPEORM_CONNECTION=postgres >> .env
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> .env
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> .env
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> .env
+            echo TYPEORM_HOST=$TYPEORM_HOST >> .env
+            echo TYPEORM_PORT=$TYPEORM_PORT >> .env
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> .env
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> .env
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> .env
+
             npm run migrations >> migrations_dump.txt
             echo 'MIGRATION RESULT'
             echo '*****************'
