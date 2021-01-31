@@ -267,7 +267,7 @@ jobs:
             cat .env
             echo '-----------------'
 
-            npm run migrations:ts >> migrations_dump.txt
+            npm run migrations >> migrations_dump.txt
 
             echo 'MIGRATION RESULT'
             echo '*****************'
