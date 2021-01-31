@@ -1,6 +1,12 @@
 version: 2.1
 
 commands:
+  aws-configure:
+    description: Configure AWS account for each docker container.
+    steps:
+      - run: aws configure set default.region $AWS_DEFAULT_REGION
+      - run: aws configure set aws_access_key_if $AWS_ACCESS_KEY_ID
+      - run: aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
@@ -212,15 +218,9 @@ jobs:
             apk add --update ansible
             apk add curl
       - run:
-          name: Configure server
-          no_output_timeout: 30m
+          name: Make .env file in backend.
           command: |
-            # Your code here
-            echo PWD $(pwd)
-            echo $TYPEORM_HOST
-            #ls -la ~/project/backend
-            echo ENVIRONMENT=production >> "backend/.env"
-            echo NODE_ENV=production >> "backend/.env"
+            echo NODE_ENV=production > "backend/.env"
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
@@ -230,7 +230,15 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "backend/.env"
+      - run:
+          name: Configure server
+          no_output_timeout: 30m
+          command: |
+            # Your code here
             ansible-playbook -i ./.circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
@@ -242,7 +250,10 @@ jobs:
       # Docker image here that supports NodeJS
       - image: circleci/node:13.8.0
     steps:
+      - aws-configure
       - checkout
+      - attach_workspace:
+            at: .
       - restore_cache:
           keys: [ backend-build ]
       - run:
@@ -257,23 +268,8 @@ jobs:
           command: |
             # Your code here
             cd backend
-            npm install
 
-            echo 'DUMP MIGRATIONS'
-            echo "PWD: " $(pwd)
-            echo ENVIRONMENT=production >> ".env"
-            echo NODE_ENV=production >> ".env"
-            echo TYPEORM_CONNECTION=postgres >> ".env"
-            echo TYPEORM_MIGRATIONS_DIR=./dist/migrations >> ".env"
-            echo TYPEORM_ENTITIES=./dist/modules/domain/**/*.entity.js >> ".env"
-            echo TYPEORM_MIGRATIONS=./dist/migrations/*.js >> ".env"
-            echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
-            echo TYPEORM_PORT=$TYPEORM_PORT >> ".env"
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
-
-            echo ".ENV FILE"
+            echo "ENV FIle"
             echo '*****************'
             cat .env
             echo '-----------------'
