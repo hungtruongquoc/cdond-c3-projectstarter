@@ -259,6 +259,7 @@ jobs:
             cd backend
             npm install
             npm run build
+
             echo 'DUMP MIGRATIONS'
             echo "PWD: " $(pwd)
             echo ENVIRONMENT=production >> ".env"
@@ -272,8 +273,8 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
-            touch ../migrations_dump.txt
-            npm run migrations >> ../migrations_dump.txt
+
+            npm run migrations >> migrations_dump.txt
             echo 'MIGRATION RESULT'
             echo '*****************'
             cat migrations_dump.txt
