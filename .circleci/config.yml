@@ -216,9 +216,9 @@ jobs:
           command: |
             echo NODE_ENV=production > "backend/.env"
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+            echo TYPEORM_MIGRATIONS_DIR=./dist/migrations >> "backend/.env"
+            echo TYPEORM_ENTITIES=./dist/modules/domain/**/*.entity.js >> "backend/.env"
+            echo TYPEORM_MIGRATIONS=./dist/migrations/*.js >> "backend/.env"
             echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
             echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
@@ -268,6 +268,7 @@ jobs:
             echo '-----------------'
 
             npm run migrations >> migrations_dump.txt
+            ls
             echo 'MIGRATION RESULT'
             echo '*****************'
             cat migrations_dump.txt
