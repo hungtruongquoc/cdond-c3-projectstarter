@@ -222,7 +222,7 @@ jobs:
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
-      - image: circleci/node:13.8.0
+      - image: circleci/node:12
     steps:
       # Checkout code from git
       - checkout
@@ -242,17 +242,7 @@ jobs:
           command: |
             # Your code here
             cd backend
-
-            echo NODE_ENV=production >> .env
-            echo TYPEORM_CONNECTION=postgres >> .env
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> .env
-            echo TYPEORM_ENTITIES="./src/modules/domain/**/*.entity.ts" >> .env
-            echo TYPEORM_MIGRATIONS="./src/migrations/*.ts" >> .env
-            echo TYPEORM_HOST=udapeople-prod.chyqbr1he5ng.us-west-2.rds.amazonaws.com >> .env
-            echo TYPEORM_PORT=5432 >> .env
-            echo TYPEORM_USERNAME=postgres >> .env
-            echo TYPEORM_PASSWORD=postgres >> .env
-            echo TYPEORM_DATABASE=udapeople_prod >> .env
+            npm install
 
             npm run migrations >> migrations_dump.txt
             echo 'MIGRATION RESULT'
